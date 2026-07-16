@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Check, Copy, TriangleAlert } from 'lucide-react'
+import { CopyCommandButton } from '@/components/copy-command-button'
 
 type CodeLine = {
   prompt?: string
@@ -9,28 +9,7 @@ type CodeLine = {
   comment?: string
 }
 
-async function copyToClipboard(text: string): Promise<void> {
-  if (navigator.clipboard && window.isSecureContext) {
-    await navigator.clipboard.writeText(text)
-    return
-  }
-
-  const textarea = document.createElement('textarea')
-  textarea.value = text
-  textarea.setAttribute('readonly', '')
-  textarea.style.position = 'fixed'
-  textarea.style.opacity = '0'
-  document.body.appendChild(textarea)
-  textarea.select()
-
-  const copied = document.execCommand('copy')
-  textarea.remove()
-
-  if (!copied) throw new Error('Clipboard copy failed')
-}
-
 function CodeBlock({ lines }: { lines: CodeLine[] }) {
-  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle')
   const [isVisible, setIsVisible] = useState(false)
   const terminalRef = useRef<HTMLDivElement>(null)
   const installerCommand = lines[0]?.code ?? ''
@@ -53,40 +32,20 @@ function CodeBlock({ lines }: { lines: CodeLine[] }) {
     return () => observer.disconnect()
   }, [])
 
-  const handleCopy = async () => {
-    try {
-      await copyToClipboard(installerCommand)
-      setCopyState('copied')
-    } catch {
-      setCopyState('error')
-    }
-
-    window.setTimeout(() => setCopyState('idle'), 2000)
-  }
-
   return (
     <div ref={terminalRef} className="relative bg-[#0d0d0d] border border-border rounded-xl overflow-hidden">
       {/* Terminal header */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
+      <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
         <div className="flex gap-1.5">
           <span className="w-3 h-3 rounded-full bg-red-500/50" />
           <span className="w-3 h-3 rounded-full bg-yellow-500/50" />
           <span className="w-3 h-3 rounded-full bg-green-500/50" />
         </div>
-        <button
-          onClick={handleCopy}
-          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Copy code"
-        >
-          {copyState === 'copied' ? (
-            <Check size={12} className="text-primary" />
-          ) : copyState === 'error' ? (
-            <TriangleAlert size={12} className="text-destructive" />
-          ) : (
-            <Copy size={12} />
-          )}
-          {copyState === 'copied' ? 'Copied' : copyState === 'error' ? 'Copy failed' : 'Copy'}
-        </button>
+        <CopyCommandButton
+          text={installerCommand}
+          showLabel
+          className="text-xs text-[#8a8a8a] hover:text-white"
+        />
       </div>
       <div className="p-5 font-mono text-sm leading-relaxed">
         {lines.map((line, i) => (
@@ -99,8 +58,8 @@ function CodeBlock({ lines }: { lines: CodeLine[] }) {
               <span className="text-primary select-none mt-0.5">{line.prompt}</span>
             )}
             <span>
-              <span className="text-foreground">{line.code}</span>
-              {line.comment && <span className="text-muted-foreground">  # {line.comment}</span>}
+              <span className="text-[#f5f5f5]">{line.code}</span>
+              {line.comment && <span className="text-[#8a8a8a]">  # {line.comment}</span>}
             </span>
           </div>
         ))}

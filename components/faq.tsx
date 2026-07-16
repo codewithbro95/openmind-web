@@ -1,55 +1,24 @@
-'use client'
-
-import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
-
-const faqs = [
-  {
-    q: 'Does OpenMind send my files anywhere?',
-    a: 'No. Your files stay in place, and OpenMind processes them on your machine through your local model provider.',
-  },
-  {
-    q: 'Which model providers does OpenMind support?',
-    a: 'LM Studio is supported today. More local model providers are planned.',
-  },
-  {
-    q: 'What file types can OpenMind index?',
-    a: 'Text, Markdown, PDF, DOCX, CSV, HTML, and images. Local OCR handles scans and image-based PDFs.',
-  },
-  {
-    q: 'Can I search without a chat model?',
-    a: 'Yes. Search uses an embedding model; a chat model is only needed for generated answers.',
-  },
-  {
-    q: 'Where is the data stored?',
-    a: 'OpenMind keeps its state in SQLite and searchable memory in LanceDB, under your local OpenMind data directory.',
-  },
-]
+import { faqItems } from '@/lib/site'
 
 function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false)
-
   return (
-    <div className="border-b border-border last:border-b-0">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-5 text-left gap-4 group"
-        aria-expanded={open}
+    <details className="group border-b border-border last:border-b-0">
+      <summary
+        className="flex w-full cursor-pointer list-none items-center justify-between gap-4 py-5 text-left [&::-webkit-details-marker]:hidden"
       >
-        <span className="text-foreground text-sm font-medium group-hover:text-primary transition-colors">
+        <span className="text-sm font-medium text-foreground transition-colors group-hover:text-primary">
           {q}
         </span>
         <ChevronDown
           size={16}
-          className={`text-muted-foreground shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className="shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
         />
-      </button>
-      {open && (
-        <div className="pb-5">
-          <p className="text-muted-foreground text-sm leading-relaxed">{a}</p>
-        </div>
-      )}
-    </div>
+      </summary>
+      <div className="pb-5">
+        <p className="text-sm leading-relaxed text-muted-foreground">{a}</p>
+      </div>
+    </details>
   )
 }
 
@@ -65,7 +34,7 @@ export function Faq() {
         </div>
 
         <div className="divide-y-0">
-          {faqs.map((item) => (
+          {faqItems.map((item) => (
             <FaqItem key={item.q} q={item.q} a={item.a} />
           ))}
         </div>

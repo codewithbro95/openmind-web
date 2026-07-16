@@ -1,27 +1,4 @@
-'use client'
-
-import { useState } from 'react'
-import { Check, Copy } from 'lucide-react'
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  return (
-    <button
-      onClick={handleCopy}
-      className="text-muted-foreground hover:text-foreground transition-colors"
-      aria-label="Copy command"
-    >
-      {copied ? <Check size={14} className="text-primary" /> : <Copy size={14} />}
-    </button>
-  )
-}
+import { CopyCommandButton } from '@/components/copy-command-button'
 
 export function Hero() {
   return (
@@ -55,7 +32,10 @@ export function Hero() {
           <div className="flex items-center gap-3 bg-card border border-border rounded-md px-4 py-2.5 font-mono text-sm w-full sm:w-auto">
             <span className="text-primary select-none">$</span>
             <span className="text-foreground">uv tool install openmind-core</span>
-            <CopyButton text="uv tool install openmind-core" />
+            <CopyCommandButton
+              text="uv tool install openmind-core"
+              className="text-muted-foreground hover:text-foreground"
+            />
           </div>
           <a
             href="https://github.com/codewithbro95/openmind"

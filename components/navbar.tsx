@@ -14,6 +14,7 @@ async function getGitHubStars(): Promise<number | null> {
         'X-GitHub-Api-Version': '2022-11-28',
       },
       next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(2000),
     })
 
     if (!response.ok) return null
@@ -58,7 +59,7 @@ export async function Navbar() {
         </a>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
+        <nav aria-label="Primary navigation" className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
           <a href="#how-it-works" className="hover:text-foreground transition-colors">How it works</a>
           <a href="#install" className="hover:text-foreground transition-colors">Install</a>
           <a href="#capabilities" className="hover:text-foreground transition-colors">Capabilities</a>
@@ -89,7 +90,7 @@ export async function Navbar() {
             <X size={20} className="hidden group-open:block" />
           </summary>
 
-          <nav className="fixed top-14 left-0 right-0 border-t border-border bg-background px-6 py-4 flex flex-col gap-4 text-sm shadow-xl">
+          <nav aria-label="Mobile navigation" className="fixed top-14 left-0 right-0 border-t border-border bg-background px-6 py-4 flex flex-col gap-4 text-sm shadow-xl">
             <a href="#how-it-works" className="text-muted-foreground hover:text-foreground">How it works</a>
             <a href="#install" className="text-muted-foreground hover:text-foreground">Install</a>
             <a href="#capabilities" className="text-muted-foreground hover:text-foreground">Capabilities</a>

@@ -1,17 +1,7 @@
-'use client'
-
-import { useState } from 'react'
-import { Check, Copy } from 'lucide-react'
+import { CopyCommandButton } from '@/components/copy-command-button'
 
 export function Cta() {
-  const [copied, setCopied] = useState(false)
   const cmd = 'uv tool install openmind-core'
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(cmd)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
 
   return (
     <section className="py-24 px-6 border-t border-border relative overflow-hidden">
@@ -40,13 +30,10 @@ export function Cta() {
           <div className="flex items-center gap-3 bg-card border border-border rounded-md px-4 py-2.5 font-mono text-sm w-full sm:w-auto">
             <span className="text-primary select-none">$</span>
             <span className="text-foreground">{cmd}</span>
-            <button
-              onClick={handleCopy}
-              className="text-muted-foreground hover:text-foreground transition-colors ml-auto"
-              aria-label="Copy command"
-            >
-              {copied ? <Check size={14} className="text-primary" /> : <Copy size={14} />}
-            </button>
+            <CopyCommandButton
+              text={cmd}
+              className="ml-auto text-muted-foreground hover:text-foreground"
+            />
           </div>
           <a
             href="https://github.com/codewithbro95/openmind"
