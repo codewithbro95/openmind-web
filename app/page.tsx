@@ -4,6 +4,7 @@ import { HowItWorks } from '@/components/how-it-works'
 import { Install } from '@/components/install'
 import { Capabilities } from '@/components/capabilities'
 import { Philosophy } from '@/components/philosophy'
+import { Contributors } from '@/components/contributors'
 import { Faq } from '@/components/faq'
 import { Cta } from '@/components/cta'
 import { Footer } from '@/components/footer'
@@ -38,6 +39,11 @@ const structuredData = [
       '@type': 'Person',
       name: siteConfig.authorName,
       url: siteConfig.authorUrl,
+      memberOf: {
+        '@type': 'Organization',
+        name: siteConfig.communityName,
+        url: siteConfig.communityUrl,
+      },
     },
     featureList: [
       'Local document and image indexing',
@@ -86,6 +92,7 @@ export default function Home() {
         <Philosophy />
         <Faq />
         <Cta />
+        <Contributors />
       </main>
       <Footer />
     </>

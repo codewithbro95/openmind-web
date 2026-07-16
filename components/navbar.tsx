@@ -63,6 +63,7 @@ export async function Navbar() {
           <a href="#how-it-works" className="hover:text-foreground transition-colors">How it works</a>
           <a href="#install" className="hover:text-foreground transition-colors">Install</a>
           <a href="#capabilities" className="hover:text-foreground transition-colors">Capabilities</a>
+          <a href="#contributors" className="hover:text-foreground transition-colors">Contributors</a>
           <a href="#faq" className="hover:text-foreground transition-colors">FAQ</a>
         </nav>
 
@@ -94,6 +95,7 @@ export async function Navbar() {
             <a href="#how-it-works" className="text-muted-foreground hover:text-foreground">How it works</a>
             <a href="#install" className="text-muted-foreground hover:text-foreground">Install</a>
             <a href="#capabilities" className="text-muted-foreground hover:text-foreground">Capabilities</a>
+            <a href="#contributors" className="text-muted-foreground hover:text-foreground">Contributors</a>
             <a href="#faq" className="text-muted-foreground hover:text-foreground">FAQ</a>
             <a
               href="https://github.com/codewithbro95/openmind"

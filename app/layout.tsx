@@ -71,11 +71,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/om-icon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/om-icon.svg', type: 'image/svg+xml' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/om-apple-icon.png',
   },
   manifest: '/manifest.webmanifest',
   appleWebApp: {

@@ -20,6 +20,8 @@ export const siteConfig = {
   licenseUrl: 'https://github.com/codewithbro95/openmind/blob/main/LICENSE',
   authorName: 'CodeWithBro95',
   authorUrl: 'https://github.com/codewithbro95',
+  communityName: 'OSS Cameroon',
+  communityUrl: 'https://osscameroon.com',
 } as const
 
 export const faqItems = [
