@@ -67,15 +67,6 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Index → Search → Ask flow */}
-        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-          {['Index', 'Search', 'Ask'].map((step, i) => (
-            <span key={step} className="flex items-center gap-2">
-              <span className="px-3 py-1 rounded-md bg-secondary text-foreground text-xs font-medium">{step}</span>
-              {i < 2 && <span className="text-border">→</span>}
-            </span>
-          ))}
-        </div>
       </div>
     </section>
   )

@@ -1,5 +1,4 @@
-import Image from 'next/image'
-import { GitBranch } from 'lucide-react'
+import { Coffee, GitBranch } from 'lucide-react'
 
 export function Footer() {
   const links = [
@@ -12,14 +11,9 @@ export function Footer() {
   return (
     <footer className="border-t border-border py-10 px-6">
       <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-6">
-        <a href="#" className="flex items-center gap-2">
-          <Image
-            src="/openmind-logo.png"
-            alt="OpenMind"
-            width={110}
-            height={30}
-            className="h-6 w-auto opacity-80 hover:opacity-100 transition-opacity"
-          />
+        <a href="#" className="flex items-center text-base font-bold opacity-80 hover:opacity-100 transition-opacity" aria-label="OpenMind home">
+          <span className="text-foreground">Open</span>
+          <span className="text-primary">Mind</span>
         </a>
 
         <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
@@ -37,8 +31,16 @@ export function Footer() {
           ))}
         </nav>
 
-        <p className="text-xs text-muted-foreground">
-          MIT © OpenMind Core
+        <p className="text-xs text-muted-foreground flex items-center gap-1.5 whitespace-nowrap">
+          Built with <Coffee size={13} className="text-primary" aria-hidden="true" /> by{' '}
+          <a
+            href="https://github.com/codewithbro95"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground hover:text-primary transition-colors"
+          >
+            CodeWithBro95
+          </a>
         </p>
       </div>
     </footer>

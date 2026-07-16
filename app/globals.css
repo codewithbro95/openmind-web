@@ -93,3 +93,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes terminal-line-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.terminal-line-enter {
+  opacity: 0;
+  animation: terminal-line-enter 320ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-line-enter {
+    opacity: 1;
+    animation: none;
+  }
+}

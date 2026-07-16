@@ -1,20 +1,71 @@
 'use client'
 
-import { useState } from 'react'
-import { Check, Copy } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Check, Copy, TriangleAlert } from 'lucide-react'
 
-function CodeBlock({ lines }: { lines: { prompt?: string; code: string; comment?: string }[] }) {
-  const [copied, setCopied] = useState(false)
-  const allCode = lines.map((l) => l.code).join('\n')
+type CodeLine = {
+  prompt?: string
+  code: string
+  comment?: string
+}
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(allCode)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+async function copyToClipboard(text: string): Promise<void> {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text)
+    return
+  }
+
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.setAttribute('readonly', '')
+  textarea.style.position = 'fixed'
+  textarea.style.opacity = '0'
+  document.body.appendChild(textarea)
+  textarea.select()
+
+  const copied = document.execCommand('copy')
+  textarea.remove()
+
+  if (!copied) throw new Error('Clipboard copy failed')
+}
+
+function CodeBlock({ lines }: { lines: CodeLine[] }) {
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle')
+  const [isVisible, setIsVisible] = useState(false)
+  const terminalRef = useRef<HTMLDivElement>(null)
+  const installerCommand = lines[0]?.code ?? ''
+
+  useEffect(() => {
+    const terminal = terminalRef.current
+    if (!terminal) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.25 },
+    )
+
+    observer.observe(terminal)
+    return () => observer.disconnect()
+  }, [])
+
+  const handleCopy = async () => {
+    try {
+      await copyToClipboard(installerCommand)
+      setCopyState('copied')
+    } catch {
+      setCopyState('error')
+    }
+
+    window.setTimeout(() => setCopyState('idle'), 2000)
   }
 
   return (
-    <div className="relative bg-[#0d0d0d] border border-border rounded-xl overflow-hidden">
+    <div ref={terminalRef} className="relative bg-[#0d0d0d] border border-border rounded-xl overflow-hidden">
       {/* Terminal header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
         <div className="flex gap-1.5">
@@ -27,13 +78,23 @@ function CodeBlock({ lines }: { lines: { prompt?: string; code: string; comment?
           className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Copy code"
         >
-          {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} />}
-          {copied ? 'Copied' : 'Copy'}
+          {copyState === 'copied' ? (
+            <Check size={12} className="text-primary" />
+          ) : copyState === 'error' ? (
+            <TriangleAlert size={12} className="text-destructive" />
+          ) : (
+            <Copy size={12} />
+          )}
+          {copyState === 'copied' ? 'Copied' : copyState === 'error' ? 'Copy failed' : 'Copy'}
         </button>
       </div>
       <div className="p-5 font-mono text-sm leading-relaxed">
         {lines.map((line, i) => (
-          <div key={i} className="flex items-start gap-2">
+          <div
+            key={`${line.code}-${i}`}
+            className={`flex min-h-[1.75rem] items-start gap-2 ${isVisible ? 'terminal-line-enter' : 'opacity-0'}`}
+            style={{ animationDelay: `${i * 180}ms` }}
+          >
             {line.prompt !== undefined && (
               <span className="text-primary select-none mt-0.5">{line.prompt}</span>
             )}
@@ -54,7 +115,6 @@ export function Install() {
   const uvLines = [
     { prompt: '$', code: 'uv tool install openmind-core' },
     { prompt: '$', code: 'openmind setup', comment: 'configure model provider' },
-    { prompt: '', code: '' },
     { prompt: '$', code: 'openmind index start', comment: 'start background indexing' },
     { prompt: '$', code: 'openmind search "order receipt"' },
     { prompt: '$', code: 'openmind ask "What was the order ID?"' },
@@ -63,7 +123,6 @@ export function Install() {
   const pipxLines = [
     { prompt: '$', code: 'pipx install openmind-core' },
     { prompt: '$', code: 'openmind setup', comment: 'configure model provider' },
-    { prompt: '', code: '' },
     { prompt: '$', code: 'openmind index start', comment: 'start background indexing' },
     { prompt: '$', code: 'openmind search "order receipt"' },
     { prompt: '$', code: 'openmind ask "What was the order ID?"' },
@@ -100,7 +159,7 @@ export function Install() {
                 </button>
               ))}
             </div>
-            <CodeBlock lines={tab === 'uv' ? uvLines : pipxLines} />
+            <CodeBlock key={tab} lines={tab === 'uv' ? uvLines : pipxLines} />
           </div>
 
           {/* Steps */}
